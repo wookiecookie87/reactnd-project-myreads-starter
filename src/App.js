@@ -14,80 +14,54 @@ class BooksApp extends React.Component {
     * users can use the browser's back and forward buttons to navigate between
     * pages, as well as provide a good URL they can bookmark and share.
     */
-        currentlyReading: [],  wantToRead: [], read: [],
+        books : []
     }
 
     componentWillMount() {
         BooksAPI.getAll()
         .then(books => {
-            console.log("thisthis", this);//BooksApp
-            
-
             this.setState(() => ({
-                currentlyReading : books.filter(book => {
-                    if(book.shelf === 'currentlyReading')
-                        return book
-                }),
-                wantToRead : books.filter(book => {
-                    if(book.shelf === 'wantToRead')
-                        return book
-                }),   
-                read : books.filter(book => {
-                    if(book.shelf === 'read')
-                        return book
-                })
-                
+                books
             }))
         })
     }
 
     updateShelf(bookUpdateInfo) {
-        const book = bookUpdateInfo[0]
+        let book = bookUpdateInfo[0]
         const shelf = bookUpdateInfo[1]
-        console.log("thisthis", this);//BooksShelf
-        
-        this.setState((currentState) => {
-            console.log("current state", currentState);
-            // this is null because this points to BookShelf class, 
-            // and I have set and want to update state at BookApp class
-            console.log("state", this.state); //So this is null as well
+        book.shelf = shelf
 
-
-            //this is just test code to see if the UI changes as the state changes;
-            //but since currentState is null, I already get
-            //TypeError: Cannot read property 'currentlyReading' of null 
-            return {
-                currentlyReading : currentState.currentlyReading.pop(),
-
-                wantToRead : currentState.wantToRead.pop(),
-
-                read : currentState.read.pop()
-            }
-
-            //I think the problem is the state is set on BooksApp class,
-            //but the state I am trying to update is from BookShelf class.
-            //Do I need to manage state at BookShelf class?
-            //or is there anyway to work this out in current set up?
-
-        })
-
+        this.setState((currentState) => ({
+                books : currentState.books.filter((books) => {
+                    return books.id !== book.id
+                }).concat(book)
+            }))
 
         BooksAPI.update(book, shelf)
     }
+
+    searchBooks(query) {
+        return BooksAPI.search(query)
+        .then(result => {
+            return result
+        })
+    }   
 
     render() {
         return (
             <div className="app">
                 <Route exact path="/" render={() => (
                     <BookList 
-                    currentlyReading={this.state.currentlyReading} 
-                    wantToRead={this.state.wantToRead} 
-                    read={this.state.read} 
-                    onUpdateShelf={this.updateShelf}/>
+                    books={this.state.books}
+                    onUpdateShelf={this.updateShelf}
+                    bookApp={this}/>
                 )}/>
                 
                 <Route path="/search" render={() => (
-                    <Search/>            
+                    <Search onSearchBooks={this.searchBooks}
+                    onUpdateShelf={this.updateShelf}
+                    bookApp={this}
+                    />            
                 )}/>   
             </div>
         )

@@ -6,15 +6,28 @@ import { Link } from 'react-router-dom'
 class BookList extends Component {
 	
 	static propTypes = {
-		currentlyReading: PropTypes.array.isRequired,
-		wantToRead: PropTypes.array.isRequired,
-		read: PropTypes.array.isRequired,
+		books : PropTypes.array.isRequired,
 		onUpdateShelf: PropTypes.func.isRequired
 	}
 
 
 
 	render() {
+		const { books } = this.props;
+
+		const currentlyReading = books.filter(book => {
+                    if(book.shelf === 'currentlyReading')
+                        return book
+                })
+        const wantToRead = books.filter(book => {
+                    if(book.shelf === 'wantToRead')
+                        return book
+                })   
+        const read = books.filter(book => {
+                    if(book.shelf === 'read')
+                        return book
+                })
+
 		return (
 			<div className="list-books">
 	            <div className="list-books-title">
@@ -22,16 +35,19 @@ class BookList extends Component {
 	            </div>
 	           	<BookShelf  
 	           	shelf="Currently Reading"
-				books={this.props.currentlyReading}
-	           	onUpdateShelf={this.props.onUpdateShelf}/>
+				books={currentlyReading}
+	           	onUpdateShelf={this.props.onUpdateShelf}
+	           	bookApp={this.props.bookApp}/>
 	           	<BookShelf 
 	           	shelf="Want to Read" 
-				books={this.props.wantToRead} 
-	           	onUpdateShelf={this.props.onUpdateShelf}/>
+				books={wantToRead} 
+	           	onUpdateShelf={this.props.onUpdateShelf}
+	           	bookApp={this.props.bookApp}/>
 	           	<BookShelf  
 	           	shelf="Read"
-				books={this.props.read} 
-	           	onUpdateShelf={this.props.onUpdateShelf}/>
+				books={read} 
+	           	onUpdateShelf={this.props.onUpdateShelf}
+	           	bookApp={this.props.bookApp}/>
 	            <div className="open-search">
 	              <Link to="/search">Add a book</Link>
 	            </div>

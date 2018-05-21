@@ -11,12 +11,16 @@ class BookShelf extends Component {
 
 	handleChange = (book, e) => {
 		if(this.props.onUpdateShelf) {
-			this.props.onUpdateShelf.call(this, [book, e.target.value])
+			this.props.onUpdateShelf.call(this.props.bookApp, [book, e.target.value])
 		}
 	}
 
 	render() {
 		const { books, shelf} = this.props
+		const shelfOptions = shelf === "Currently Reading" ? 'currentlyReading' : 
+							 (shelf === "Want to Read" ? "wantToRead" :
+							 (shelf === "Read" ? "read" : 'none'))
+							
 		return (
 			 <div className="list-books-content">
               <div>
@@ -33,7 +37,7 @@ class BookShelf extends Component {
 												width: 128, height: 188, 
 												backgroundImage: 'url("'+book.imageLinks.thumbnail+'")' }}></div>
 											<div className="book-shelf-changer">
-												<select value="currentlyReading" onChange={(e) =>this.handleChange(book, e)}>
+												<select value={shelfOptions} onChange={(e) =>this.handleChange(book, e)}>
 													<option value="none" disabled>Move to...</option>
 													<option value="currentlyReading">Currently Reading</option>
 													<option value="wantToRead">Want to Read</option>
