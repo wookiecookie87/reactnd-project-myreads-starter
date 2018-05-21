@@ -20,7 +20,9 @@ class BooksApp extends React.Component {
     componentWillMount() {
         BooksAPI.getAll()
         .then(books => {
-            console.log("thisthis1111", this);
+            console.log("thisthis", this);//BooksApp
+            
+
             this.setState(() => ({
                 currentlyReading : books.filter(book => {
                     if(book.shelf === 'currentlyReading')
@@ -42,9 +44,12 @@ class BooksApp extends React.Component {
     updateShelf(bookUpdateInfo) {
         const book = bookUpdateInfo[0]
         const shelf = bookUpdateInfo[1]
-        console.log("thisthis", this);
+        console.log("thisthis", this);//BooksShelf
+        
         this.setState((currentState) => {
-            console.log("current state", currentState);// this is null;
+            console.log("current state", currentState);
+            // this is null because this points to BookShelf class, 
+            // and I have set and want to update state at BookApp class
             console.log("state", this.state); //So this is null as well
 
 
@@ -58,17 +63,7 @@ class BooksApp extends React.Component {
 
                 read : currentState.read.pop()
             }
-            //and even if I try something like
 
-            //  return {
-            //     currentlyReading : []
-
-            //     wantToRead : [],
-
-            //     read : []
-            // }
-
-            // Nothing chnages.
             //I think the problem is the state is set on BooksApp class,
             //but the state I am trying to update is from BookShelf class.
             //Do I need to manage state at BookShelf class?
