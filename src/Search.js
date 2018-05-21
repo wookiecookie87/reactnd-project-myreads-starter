@@ -23,12 +23,20 @@ class Search extends Component {
 		}), () => {
 			this.props.onSearchBooks(query)
 			.then(searchedBooks => {
+				if(searchedBooks instanceof Array){
+					searchedBooks.forEach(b => {
+						this.props.books.forEach(book => {
+							if(b.id === book.id){
+								b.shelf = book.shelf
+							}
+						})
+					})
+				}else 
+					searchedBooks = []
 				console.log(searchedBooks)
-				if(searchedBooks)
-
 
 				this.setState(()=>({
-					searchedBooks : searchedBooks.length > 0   ? searchedBooks : [] 
+					searchedBooks
 				}))
 			})
 		})
@@ -72,9 +80,9 @@ class Search extends Component {
 										<div className="book-top">
 											<div className="book-cover" style={{ 
 												width: 128, height: 188, 
-												backgroundImage: 'url("'+ book.imageLinks.thumbnail +'")' }}></div>
+												backgroundImage: 'url("'+ (book.imageLinks ? book.imageLinks.thumbnail : "") +'")' }}></div>
 											<div className="book-shelf-changer">
-												<select value="none" onChange={(e) =>this.handleChange(book, e)}>
+												<select value={book.shelf ? book.shelf : 'none'} onChange={(e) =>this.handleChange(book, e)}>
 													<option value="none" disabled>Move to...</option>
 													<option value="currentlyReading">Currently Reading</option>
 													<option value="wantToRead">Want to Read</option>
@@ -84,7 +92,7 @@ class Search extends Component {
 											</div>
 										</div>	
 										<div className="book-title">{book.title}</div>
-										<div className="book-authors">{book.authors}</div>
+										<div className="book-authors">{book.authors ? book.authors : ''}</div>
 									</div>
 								</li>
 							))
