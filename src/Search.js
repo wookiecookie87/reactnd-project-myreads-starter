@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Book from './Book.js'
 import { Link } from 'react-router-dom'
 
 
@@ -7,13 +8,6 @@ class Search extends Component {
 		query : "",
 		searchedBooks : []
 	}
-	
-	handleChange = (book, e) => {
-		if(this.props.onUpdateShelf) {
-			this.props.onUpdateShelf.call(this.props.bookApp, [book, e.target.value])
-		}
-	}
-
 
 	updateQuery = (query) => {
 		this.searchedBooks = []
@@ -25,6 +19,7 @@ class Search extends Component {
 			.then(searchedBooks => {
 				if(searchedBooks instanceof Array){
 					searchedBooks.forEach(b => {
+						b.shelf = 'none'
 						this.props.books.forEach(book => {
 							if(b.id === book.id){
 								b.shelf = book.shelf
@@ -46,6 +41,7 @@ class Search extends Component {
 
 	render() {
 		const { query, searchedBooks } = this.state
+		const { onUpdateShelf } = this.props
 		
 		return (
 			<div className="search-books">
@@ -75,26 +71,11 @@ class Search extends Component {
 	              <ol className="books-grid">
 					{
                       		searchedBooks.map((book) => (
-								<li key={book.id}>
-									<div className="book">
-										<div className="book-top">
-											<div className="book-cover" style={{ 
-												width: 128, height: 188, 
-												backgroundImage: 'url("'+ (book.imageLinks ? book.imageLinks.thumbnail : "") +'")' }}></div>
-											<div className="book-shelf-changer">
-												<select value={book.shelf ? book.shelf : 'none'} onChange={(e) =>this.handleChange(book, e)}>
-													<option value="none" disabled>Move to...</option>
-													<option value="currentlyReading">Currently Reading</option>
-													<option value="wantToRead">Want to Read</option>
-													<option value="read">Read</option>
-													<option value="none">None</option>
-												</select>
-											</div>
-										</div>	
-										<div className="book-title">{book.title}</div>
-										<div className="book-authors">{book.authors ? book.authors : ''}</div>
-									</div>
-								</li>
+                      			<Book key={book.id}
+								book={book}
+								shelf={book.shelf}
+								onUpdateShelf={onUpdateShelf}
+								/>
 							))
                       	}
 	              </ol>

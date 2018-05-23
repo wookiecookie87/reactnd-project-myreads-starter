@@ -36,18 +36,15 @@ class BookList extends Component {
 	           	<BookShelf  
 	           	shelf="Currently Reading"
 				books={currentlyReading}
-	           	onUpdateShelf={this.props.onUpdateShelf}
-	           	bookApp={this.props.bookApp}/>
+	           	onUpdateShelf={this.props.onUpdateShelf}/>
 	           	<BookShelf 
 	           	shelf="Want to Read" 
 				books={wantToRead} 
-	           	onUpdateShelf={this.props.onUpdateShelf}
-	           	bookApp={this.props.bookApp}/>
+	           	onUpdateShelf={this.props.onUpdateShelf}/>
 	           	<BookShelf  
 	           	shelf="Read"
 				books={read} 
-	           	onUpdateShelf={this.props.onUpdateShelf}
-	           	bookApp={this.props.bookApp}/>
+	           	onUpdateShelf={this.props.onUpdateShelf}/>
 	            <div className="open-search">
 	              <Link to="/search">Add a book</Link>
 	            </div>
